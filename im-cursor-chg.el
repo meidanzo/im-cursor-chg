@@ -29,12 +29,24 @@
            current-input-method)
     current-input-method))
 
+(defun gui-cursor-color ()
+  (set-cursor-color (if (im--chinese-p)
+                        im-cursor-color
+                      im-default-cursor-color))
+  )
+
+(defun terminal-cursor-color ()
+  (send-string-to-terminal (if (im--chinese-p)
+                               (format "\e]12;%s\a" im-cursor-color)
+                             (format "\e]12;%s\a" im-default-cursor-color)))
+  )
+
 (defun im-change-cursor-color ()
   "Set cursor color depending on input method."
   (interactive)
-  (set-cursor-color (if (im--chinese-p)
-                        im-cursor-color
-                      im-default-cursor-color)))
+  (if (display-graphic-p)
+      (gui-cursor-color)
+    (terminal-cursor-color)))
 
 (define-minor-mode cursor-chg-mode
   "Toggle changing cursor color.
