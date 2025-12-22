@@ -2,6 +2,8 @@
 
 ;; Inspired by code from cursor-chg
 ;; URL: https://github.com/emacsmirror/cursor-chg/blob/master/cursor-chg.el
+;; URL: https://github.com/Eason0210/im-cursor-chg
+;; LICENSE: https://www.emacswiki.org/
 
 ;;; Commentary:
 ;;
@@ -30,12 +32,14 @@
     current-input-method))
 
 (defun gui-cursor-color ()
+  "GUI Emacs cursor color."
   (set-cursor-color (if (im--chinese-p)
                         im-cursor-color
                       im-default-cursor-color))
   )
 
 (defun terminal-cursor-color ()
+  "Terminal Emacs cursor color."
   (send-string-to-terminal (if (im--chinese-p)
                                (format "\e]12;%s\a" im-cursor-color)
                              (format "\e]12;%s\a" im-default-cursor-color)))
@@ -48,6 +52,7 @@
      (format "\e]12;%s\a" im-default-cursor-color))))
 
 (defun terminal-restore-before-exit (&rest _)
+  "Exit terminal Emacs restore terminal color."
   (terminal-restore-cursor-color))
 
 ; exit emacs
