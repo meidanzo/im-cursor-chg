@@ -41,6 +41,25 @@
                              (format "\e]12;%s\a" im-default-cursor-color)))
   )
 
+(defun terminal-restore-cursor-color ()
+  "Restore terminal cursor color."
+  (unless (display-graphic-p)
+    (send-string-to-terminal
+     (format "\e]12;%s\a" im-default-cursor-color))))
+
+(defun terminal-restore-before-exit (&rest _)
+  (terminal-restore-cursor-color))
+
+; exit emacs
+(add-hook 'kill-emacs-hook #'terminal-restore-cursor-color t)
+; suspend emacs
+(add-hook 'suspend-hook #'terminal-restore-cursor-color t)
+; daemon/client, exit emacsclient
+(advice-add 'save-buffers-kill-terminal
+            :before
+            #'terminal-restore-before-exit)
+
+
 (defun im-change-cursor-color ()
   "Set cursor color depending on input method."
   (interactive)
