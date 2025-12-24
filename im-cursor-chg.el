@@ -2,6 +2,8 @@
 
 ;; Inspired by code from cursor-chg
 ;; URL: https://github.com/emacsmirror/cursor-chg/blob/master/cursor-chg.el
+;; URL: https://github.com/Eason0210/im-cursor-chg
+;; LICENSE: https://www.emacswiki.org/
 
 ;;; Commentary:
 ;;
@@ -29,12 +31,48 @@
            current-input-method)
     current-input-method))
 
-(defun im-change-cursor-color ()
-  "Set cursor color depending on input method."
-  (interactive)
+(defun gui-cursor-color ()
+  "GUI Emacs cursor color."
   (set-cursor-color (if (im--chinese-p)
                         im-cursor-color
                       im-default-cursor-color)))
+
+(defun terminal-cursor-color ()
+  "Terminal Emacs cursor color."
+  (if (string= im-default-cursor-color "black")
+      (setq im-default-cursor-color "white"))
+  (send-string-to-terminal (if (im--chinese-p)
+                               (format "\e]12;%s\a" im-cursor-color)
+                             (format "\e]12;%s\a" im-default-cursor-color))))
+
+(defun terminal-restore-cursor-color ()
+  "Restore terminal cursor color."
+  (if (string= im-default-cursor-color "black")
+      (setq im-default-cursor-color "white"))
+  (unless (display-graphic-p)
+    (send-string-to-terminal
+     (format "\e]12;%s\a" im-default-cursor-color))))
+
+(defun terminal-restore-before-exit (&rest _)
+  "Exit terminal Emacs restore terminal color."
+  (terminal-restore-cursor-color))
+
+; exit emacs
+(add-hook 'kill-emacs-hook #'terminal-restore-cursor-color t)
+; suspend emacs
+(add-hook 'suspend-hook #'terminal-restore-cursor-color t)
+; daemon/client, exit emacsclient
+(advice-add 'save-buffers-kill-terminal
+            :before
+            #'terminal-restore-before-exit)
+
+
+(defun im-change-cursor-color ()
+  "Set cursor color depending on input method."
+  (interactive)
+  (if (display-graphic-p)
+      (gui-cursor-color)
+    (terminal-cursor-color)))
 
 (define-minor-mode cursor-chg-mode
   "Toggle changing cursor color.
