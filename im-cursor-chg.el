@@ -35,18 +35,20 @@
   "GUI Emacs cursor color."
   (set-cursor-color (if (im--chinese-p)
                         im-cursor-color
-                      im-default-cursor-color))
-  )
+                      im-default-cursor-color)))
 
 (defun terminal-cursor-color ()
   "Terminal Emacs cursor color."
+  (if (string= im-default-cursor-color "black")
+      (setq im-default-cursor-color "white"))
   (send-string-to-terminal (if (im--chinese-p)
                                (format "\e]12;%s\a" im-cursor-color)
-                             (format "\e]12;%s\a" im-default-cursor-color)))
-  )
+                             (format "\e]12;%s\a" im-default-cursor-color))))
 
 (defun terminal-restore-cursor-color ()
   "Restore terminal cursor color."
+  (if (string= im-default-cursor-color "black")
+      (setq im-default-cursor-color "white"))
   (unless (display-graphic-p)
     (send-string-to-terminal
      (format "\e]12;%s\a" im-default-cursor-color))))
