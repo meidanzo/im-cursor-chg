@@ -1,12 +1,18 @@
 ;;; im-cursor-chg.el --- Change cursor color for input method  -*- lexical-binding: t; -*-
 
-;; Inspired by code from cursor-chg
-;; URL: https://github.com/emacsmirror/cursor-chg/blob/master/cursor-chg.el
+;; Copyright (C) 2021-2026 Eason Huang
+
+;; Author: Eason Huang <aqua0210@163.com>
+;; Package-Requires: ((emacs "27.1"))
 ;; URL: https://github.com/Eason0210/im-cursor-chg
-;; LICENSE: https://www.emacswiki.org/
+;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
 ;;
+
+;; It is inspired by code from cursor-chg
+;; URL: https://github.com/emacsmirror/cursor-chg/blob/master/cursor-chg.el
+
 ;; To turn on the cursor color change by default,
 ;; put the following in your Emacs init file.
 ;;
